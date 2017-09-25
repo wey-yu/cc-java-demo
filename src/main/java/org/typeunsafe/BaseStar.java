@@ -4,8 +4,11 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.ext.web.handler.BodyHandler;
+
+import java.util.Arrays;
 import java.util.Optional;
 
 public class BaseStar extends AbstractVerticle {
@@ -16,7 +19,13 @@ public class BaseStar extends AbstractVerticle {
     Router router = Router.router(vertx);
     router.route().handler(BodyHandler.create());
 
-    router.get("/api/raiders").handler(context -> {
+    router.get("/api/raiders").handler((RoutingContext context) -> {
+
+      if(context.failed()) {
+        System.out.println(Arrays.toString(context.failure().getStackTrace()));
+      }
+
+
       context.response()
         .putHeader("content-type", "application/json;charset=UTF-8")
         .end(new JsonObject().put("message", "hello").encodePrettily());
